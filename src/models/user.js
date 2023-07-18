@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const { handleMongooseError } = require("../utils");
 const Joi = require("joi");
 
-const nameRegex = /^[a-zA-Z0-9А-яЁёІіЇї\d]{1,16}$/;
+const nameRegex = /^[a-zA-Z0-9А-яЁёІіЇї\d]{1,40}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,16}$/;
 const emailRegex = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.]+(\.[a-zA-Z]+){1,2}$/;
 
@@ -65,8 +65,8 @@ const userSchema = new Schema(
 userSchema.post("save", handleMongooseError);
 
 const userRegistrSchema = Joi.object({
-  name: Joi.string().regex(nameRegex).min(1).max(16).required().messages({
-    "string.pattern.base": "Name limit: 16 letters, no spaces, no spec.symbols",
+  name: Joi.string().regex(nameRegex).min(1).max(40).required().messages({
+    "string.pattern.base": "Name limit: 40 letters, no spaces, no spec.symbols",
   }),
   email: Joi.string()
     .min(7)
@@ -110,8 +110,8 @@ const userLoginSchema = Joi.object({
 });
 
 const userUpdateSchema = Joi.object({
-  name: Joi.string().regex(nameRegex).min(1).max(16).required().messages({
-    "string.pattern.base": "Name limit: 16 letters",
+  name: Joi.string().regex(nameRegex).min(1).max(40).required().messages({
+    "string.pattern.base": "Name limit: 40 letters",
   }),
   avatar: Joi.any(),
 });
