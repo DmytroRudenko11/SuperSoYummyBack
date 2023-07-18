@@ -14,15 +14,19 @@ const router = express.Router();
 
 router.get(
   "/category-list",
-  authentificate,
+  // authentificate,
   categoryControllers.getListCategory
 );
 
-router.get("/main-page", authentificate, controllers.getMainPageRecipe);
+router.get(
+  "/main-page",
+  //  authentificate,
+  controllers.getMainPageRecipe
+);
 
 router.get(
   "/:id",
-  authentificate,
+  // authentificate,
   isValidId,
   isValidIdRecipe,
   controllers.getRecipeById
@@ -30,7 +34,7 @@ router.get(
 
 router.get(
   "/category/:category",
-  authentificate,
+  // authentificate,
   optimizeRequest,
   isValidCategory,
   controllers.getCategoryRecipe
