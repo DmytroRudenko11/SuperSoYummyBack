@@ -94,8 +94,8 @@ const recipeCategoryServise = async ({
   recipeLimit,
   category,
 }) =>
-  await Category.aggregate([
-    ...piplineRecipe(categoryLimit, recipeLimit, category),
-  ]);
+  await Category.aggregate(
+    ...piplineRecipe(categoryLimit, recipeLimit, category)
+  );
 
 module.exports = recipeCategoryServise;

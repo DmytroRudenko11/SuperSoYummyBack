@@ -13,7 +13,7 @@ const apiInfo = {
   produces: ["application/json"],
   servers: [
     { url: "http://localhost:3001" },
-    { url: "https://so-yummy-mg49.onrender.com" },
+    { url: "https://supersoyummy.onrender.com" },
   ],
 };
 
