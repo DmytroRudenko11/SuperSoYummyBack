@@ -32,7 +32,7 @@ const getCategoryRecipe = async (req, res) => {
     throw HttpError(400, "Invalid recipeLimit parameter");
   }
 
-  const data = await recipeCategoryServise({
+  const [data] = await recipeCategoryServise({
     recipeLimit,
     category,
   });
