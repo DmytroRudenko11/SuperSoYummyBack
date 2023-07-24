@@ -9,8 +9,17 @@ const {
   unSubscribtion,
 } = require("../../controllers/subscription-controllers");
 
-router.post("/", authentificate, validateBody(userEmailSchema), subscription);
+router.post(
+  "/",
+  // authentificate,
+  validateBody(userEmailSchema),
+  subscription
+);
 
-router.delete("/:id", authentificate, unSubscribtion);
+router.delete(
+  "/:id",
+  // authentificate,
+  unSubscribtion
+);
 
 module.exports = router;
