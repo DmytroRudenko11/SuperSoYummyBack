@@ -12,7 +12,7 @@ const getMainPageRecipe = async (req, res) => {
     );
   }
 
-  const [data] = await recipeCategoryServise({ categoryLimit, recipeLimit });
+  const data = await recipeCategoryServise({ categoryLimit, recipeLimit });
 
   res.json(data);
 };
