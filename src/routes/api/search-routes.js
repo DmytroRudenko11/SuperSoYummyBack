@@ -4,6 +4,10 @@ const { authentificate } = require("../../middleWares");
 
 const searchControllers = require("../../controllers/search-controllers");
 
-router.get("/", authentificate, searchControllers.getSearchRecipes);
+router.get(
+  "/",
+  // authentificate,
+  searchControllers.getSearchRecipes
+);
 
 module.exports = router;
