@@ -29,6 +29,12 @@ router.post(
   authControllers.login
 );
 
+router.post(
+  "/refresh",
+  validateBody(schemas.refreshTokenSchema),
+  authControllers.refresh
+);
+
 router.get("/current", authentificate, authControllers.getCurrent);
 
 router.post("/logout", authentificate, authControllers.logout);
