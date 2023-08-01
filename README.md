@@ -38,7 +38,7 @@ So-Yummy is built using the following tools:
 ```
 DB_HOST=host of database of mongodb
 PORT=number of localhost port
-SECRET_KEY=secret key for jwt encryption
+ACCESS_SECRET_KEY=secret key for jwt encryption
 BASE_URL=base URL of the back-end project
 MAIL_PASSWORD=password for email servises
 MAIL_APP=app email box

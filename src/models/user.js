@@ -46,16 +46,19 @@ const userSchema = new Schema(
       minlegth: 6,
       required: [true, "Set password for user"],
     },
-    token: {
-      type: String,
-      default: "",
-    },
     avatarURL: {
       type: String,
     },
     subscription: {
       type: Boolean,
       default: false,
+    },
+    accessToken: {
+      type: String,
+      default: "",
+    },
+    refreshToken: {
+      type: String,
     },
     shoppingList: [shoppingListSchema],
   },
@@ -123,11 +126,16 @@ const userShoppingListSchema = Joi.object({
   thb: Joi.string().required(),
 });
 
+const refreshTokenSchema = Joi.object({
+  refreshToken: Joi.string().required(),
+});
+
 const schemas = {
   userRegistrSchema,
   userLoginSchema,
   userUpdateSchema,
   userShoppingListSchema,
+  refreshTokenSchema,
 };
 
 const User = model("user", userSchema);

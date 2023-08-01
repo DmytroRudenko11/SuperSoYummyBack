@@ -11,7 +11,6 @@ const getSearchRecipes = async (req, res) => {
     page = 1,
     limit = 12,
   } = req.query;
-  const { _id } = req.user;
 
   let searchQuery = "";
 

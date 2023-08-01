@@ -1,13 +1,16 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
-const path = require("path");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../helpers/generateToken");
 
 const { ctrlWrapper, cloudinary } = require("../utils");
 const { HttpError } = require("../helpers");
 const { User } = require("../models/user");
 
-const { SECRET_KEY, FRONTEND_URL } = process.env;
+const { FRONTEND_URL, REFRESH_SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -27,14 +30,17 @@ const register = async (req, res) => {
 
   const currentUser = await User.findOne({ email });
   const { _id: id } = currentUser;
+
   const payload = {
     id: currentUser._id,
   };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "48h" });
-  await User.findByIdAndUpdate(id, { token });
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = generateRefreshToken(payload);
+  await User.findByIdAndUpdate(id, { accessToken, refreshToken });
   res.status(201).json({
-    token,
+    accessToken,
+    refreshToken,
     user: {
       _id: currentUser._id,
       name: currentUser.name,
@@ -55,17 +61,18 @@ const login = async (req, res) => {
   if (!passwordCompare) {
     throw HttpError(401);
   }
-
   const { _id: id } = user;
 
   const payload = {
     id: user._id,
   };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "48h" });
-  await User.findByIdAndUpdate(id, { token });
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = generateRefreshToken(payload);
+  await User.findByIdAndUpdate(id, { accessToken, refreshToken });
   res.json({
-    token,
+    accessToken,
+    refreshToken,
     user: {
       _id: user._id,
       name: user.name,
@@ -73,6 +80,37 @@ const login = async (req, res) => {
       avatarURL: user.avatarURL,
     },
   });
+};
+
+const refresh = async (req, res) => {
+  const { refreshToken } = req.body;
+  try {
+    const { id } = jwt.verify(refreshToken, REFRESH_SECRET_KEY);
+
+    const isExist = await User.findOne({ refreshToken });
+
+    if (!isExist) {
+      throw HttpError(403, "Invalid token");
+    }
+
+    const payload = {
+      id,
+    };
+
+    const accessToken = generateAccessToken(payload);
+    const newRefreshToken = generateRefreshToken(payload);
+
+    await User.findByIdAndUpdate(id, {
+      accessToken,
+      refreshToken: newRefreshToken,
+    });
+    res.json({
+      accessToken,
+      refreshToken: newRefreshToken,
+    });
+  } catch (error) {
+    throw HttpError(403, error.message);
+  }
 };
 
 const getCurrent = async (req, res) => {
@@ -90,7 +128,7 @@ const getCurrent = async (req, res) => {
 
 const logout = async (req, res) => {
   const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: "" });
+  await User.findByIdAndUpdate(_id, { accessToken: "", refreshToken: "" });
 
   res.json({
     message: "Logout success",
@@ -129,16 +167,17 @@ const googleAuth = async (req, res) => {
 
   const payload = { id };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "48h" });
-  await User.findByIdAndUpdate(id, { token });
+  const accessToken = generateAccessToken(id);
+  await User.findByIdAndUpdate(id, { accessToken });
   res.redirect(
-    `${FRONTEND_URL}?token=${token}&name=${name}&email=${email}&avatarURL=${avatarURL}&_id=${id}`
+    `${FRONTEND_URL}?token=${accessToken}&name=${name}&email=${email}&avatarURL=${avatarURL}&_id=${id}`
   );
 };
 
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  refresh: ctrlWrapper(refresh),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   updateUser: ctrlWrapper(updateUser),
