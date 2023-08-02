@@ -116,7 +116,18 @@ const authRoutes = {
       tags: ["Auth"],
       summary: "Logout user",
       parameters: [],
-      security: [{ Bearer: [] }],
+      security: [],
+      requestBody: {
+        description: "User's ID",
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              _id: "user's id",
+            },
+          },
+        },
+      },
       responses: {
         200: {
           description: "User is logged out",

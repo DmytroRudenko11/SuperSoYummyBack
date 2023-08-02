@@ -37,7 +37,11 @@ router.post(
 
 router.get("/current", authentificate, authControllers.getCurrent);
 
-router.post("/logout", authentificate, authControllers.logout);
+router.post(
+  "/logout",
+  // authentificate,
+  authControllers.logout
+);
 
 router.patch(
   "/edit",

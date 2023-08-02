@@ -4,13 +4,13 @@ const { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY } = process.env;
 
 const generateAccessToken = (payload) => {
   return jwt.sign(payload, ACCESS_SECRET_KEY, {
-    expiresIn: "30m",
+    expiresIn: "1m",
   });
 };
 
 const generateRefreshToken = (payload) => {
   return jwt.sign(payload, REFRESH_SECRET_KEY, {
-    expiresIn: "30d",
+    expiresIn: "5d",
   });
 };
 
