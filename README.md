@@ -52,9 +52,9 @@ FRONTEND_URL=base URL of front-end part
 
 ## Links
 
-- [Live Demo](https://https://vazhavazh.github.io/so_yummy/)
+- [Live Demo](https://vazhavazh.github.io/so_yummy/)
 - [Frontend Repository](https://github.com/vazhavazh/so_yummy)
-- [Backend Repository](https://github.com/RomanXz92/So-Yummy)
+- [Backend Repository](https://github.com/DmytroRudenko11/SuperSoYummyBack)
 - [Swagger Docs](https://so-yummy-mg49.onrender.com/api-docs/)
 
 ## Developers
