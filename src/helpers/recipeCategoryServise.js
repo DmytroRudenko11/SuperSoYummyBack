@@ -24,6 +24,14 @@ const piplineRecipe = (categoryLimit, recipeLimit, category) => {
       },
     },
     {
+      $match: {
+        $or: [
+          { "recipes.isPublic": { $exists: false } },
+          { "recipes.isPublic": true },
+        ],
+      },
+    },
+    {
       $project: {
         points: 1,
         category: 1,

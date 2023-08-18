@@ -1,5 +1,5 @@
 const { HttpError } = require("../helpers");
-const Recipe = require("../models/recipe");
+const { Recipe } = require("../models/recipe");
 const { OwnRecipe } = require("../models/ownRecipe");
 
 const isValidIdRecipe = async (req, res, next) => {

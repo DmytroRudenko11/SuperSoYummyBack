@@ -1,4 +1,4 @@
-const Recipe = require("../models/recipe");
+const { Recipe } = require("../models/recipe");
 const ObjectId = require("mongodb").ObjectId;
 const { OwnRecipe } = require("../models/ownRecipe");
 

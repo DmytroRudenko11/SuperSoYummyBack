@@ -1,12 +1,13 @@
 const { ObjectId } = require("mongodb");
-const { OwnRecipe } = require("../models/ownRecipe");
+const { Recipe } = require("../models/recipe");
 const { ctrlWrapper } = require("../utils");
 const { HttpError } = require("../helpers");
 const { cloudinary } = require("../utils");
 const { ownRecipeServise } = require("../helpers/recipeServise");
 
 const addOwnRecipe = async (req, res) => {
-  const { title, description, category, time, instructions } = req.body;
+  const { title, description, category, time, instructions, isPublic } =
+    req.body;
   const { _id: owner } = req.user;
   const ingredients = req.body.ingredients.map((item) => {
     return { ...item, id: new ObjectId(item.id) };
@@ -19,7 +20,7 @@ const addOwnRecipe = async (req, res) => {
     preview = imageUrl;
   }
 
-  const data = await OwnRecipe.create({
+  const data = await Recipe.create({
     title,
     description,
     category,
@@ -28,6 +29,7 @@ const addOwnRecipe = async (req, res) => {
     preview,
     instructions,
     owner,
+    isPublic,
   });
 
   res.status(201).json({
@@ -49,10 +51,10 @@ const getOwnRecipes = async (req, res) => {
   }
 
   const skip = (page - 1) * limit;
-  const allData = await OwnRecipe.find({ owner });
+  const allData = await Recipe.find({ owner });
   const totalPages = Math.ceil(allData.length / limit);
 
-  const data = await OwnRecipe.aggregate([
+  const data = await Recipe.aggregate([
     {
       $match: {
         owner,
@@ -77,10 +79,9 @@ const getOwnRecipes = async (req, res) => {
 
   res.json({ totalPages, data });
 };
+
 const deleteOwnRecipe = async (req, res) => {
-  const deletedRecipe = await OwnRecipe.findByIdAndRemove(
-    req.params.ownRecipeId
-  );
+  const deletedRecipe = await Recipe.findByIdAndRemove(req.params.ownRecipeId);
 
   if (!deletedRecipe) {
     throw HttpError(

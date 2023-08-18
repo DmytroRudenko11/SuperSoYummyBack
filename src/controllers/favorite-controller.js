@@ -1,5 +1,5 @@
 const { ctrlWrapper } = require("../utils");
-const Recipe = require("../models/recipe");
+const { Recipe } = require("../models/recipe");
 const { HttpError } = require("../helpers");
 
 const patchAddfavorite = async (req, res) => {

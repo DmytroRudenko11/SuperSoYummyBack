@@ -78,6 +78,9 @@ const ownRecipeSchema = new Schema(
       ref: "user",
       required: true,
     },
+    isPrivate: {
+      type: Boolean,
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -104,12 +107,16 @@ const ownRecipesAddSchema = Joi.object({
         "Category option is rescticted by options given in GET /api/recipes/category-list",
     }),
   time: Joi.string().required(),
-  ingredients: Joi.array().items(ingredientSchema),
+  ingredients: Joi.array().items(ingredientSchema).min(1).required().messages({
+    "array.min": "At least one ingredient is required",
+    "any.required": "Ingredients array is a required field",
+  }),
   preview: Joi.any(),
   instructions: Joi.string().max(400).required().messages({
     "string.max": "400 characters length max",
     "any.required": "instructions is required field",
   }),
+  isPrivate: Joi.boolean(),
 });
 
 recipeIngredientSchema.post("save", handleMongooseError);
