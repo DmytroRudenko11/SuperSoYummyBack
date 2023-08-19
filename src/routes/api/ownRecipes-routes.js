@@ -25,7 +25,7 @@ router.post(
 router.get("/", authentificate, ownRecipesControllers.getOwnRecipes);
 
 router.get(
-  "/:ownRecipeId",
+  "/:id",
   authentificate,
   isValidId,
   isValidIdRecipe,
@@ -33,7 +33,7 @@ router.get(
 );
 
 router.delete(
-  "/:ownRecipeId",
+  "/:id",
   authentificate,
   isValidId,
   ownRecipesControllers.deleteOwnRecipe

@@ -3,7 +3,7 @@ const { Recipe } = require("../models/recipe");
 const { ctrlWrapper } = require("../utils");
 const { HttpError } = require("../helpers");
 const { cloudinary } = require("../utils");
-const { ownRecipeServise } = require("../helpers/recipeServise");
+const { recipeServise } = require("../helpers/recipeServise");
 
 const addOwnRecipe = async (req, res) => {
   const { title, description, category, time, instructions, isPublic } =
@@ -82,21 +82,18 @@ const getOwnRecipes = async (req, res) => {
 };
 
 const deleteOwnRecipe = async (req, res) => {
-  const deletedRecipe = await Recipe.findByIdAndRemove(req.params.ownRecipeId);
+  const deletedRecipe = await Recipe.findByIdAndRemove(req.params.id);
 
   if (!deletedRecipe) {
-    throw HttpError(
-      404,
-      `Recipe with id "${req.params.ownRecipeId}" is missing`
-    );
+    throw HttpError(404, `Recipe with id "${req.params.id}" is missing`);
   }
   res.status(204).send();
 };
 
 const getOwnRecipeById = async (req, res) => {
-  const { ownRecipeId } = req.params;
+  const { id } = req.params;
 
-  const [data] = await ownRecipeServise({ ownRecipeId });
+  const [data] = await recipeServise({ id });
 
   res.json(data);
 };

@@ -2,7 +2,7 @@ const { isValidObjectId } = require("mongoose");
 const { HttpError } = require("../helpers");
 
 const isValidId = (req, res, next) => {
-  const { id, ownRecipeId } = req.params;
+  const { id } = req.params;
   if (id === "category") {
     throw HttpError(404);
   }
