@@ -13,7 +13,8 @@ const addOwnRecipe = async (req, res) => {
     return { ...item, id: new ObjectId(item.id) };
   });
 
-  let preview = "";
+  let preview =
+    "https://res.cloudinary.com/dcxlayslv/image/upload/v1692443730/ownrecipe/bvwsacbew2clghxuhte5.jpg";
 
   if (req.file) {
     const imageUrl = cloudinary.url(req.file.filename);
