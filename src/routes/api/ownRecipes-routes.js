@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { ownRecipesAddSchema } = require("../../models/ownRecipe");
+const { ownRecipesAddSchema } = require("../../models/recipe");
 const { validateBody } = require("../../utils");
 
 const ownRecipesControllers = require("../../controllers/ownRecipes-controllers");
@@ -25,7 +25,7 @@ router.post(
 router.get("/", authentificate, ownRecipesControllers.getOwnRecipes);
 
 router.get(
-  "/:ownRecipeId",
+  "/:id",
   authentificate,
   isValidId,
   isValidIdRecipe,
@@ -33,7 +33,7 @@ router.get(
 );
 
 router.delete(
-  "/:ownRecipeId",
+  "/:id",
   authentificate,
   isValidId,
   ownRecipesControllers.deleteOwnRecipe

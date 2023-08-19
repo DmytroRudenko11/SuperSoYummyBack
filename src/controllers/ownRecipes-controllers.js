@@ -1,25 +1,27 @@
 const { ObjectId } = require("mongodb");
-const { OwnRecipe } = require("../models/ownRecipe");
+const { Recipe } = require("../models/recipe");
 const { ctrlWrapper } = require("../utils");
 const { HttpError } = require("../helpers");
 const { cloudinary } = require("../utils");
-const { ownRecipeServise } = require("../helpers/recipeServise");
+const { recipeServise } = require("../helpers/recipeServise");
 
 const addOwnRecipe = async (req, res) => {
-  const { title, description, category, time, instructions } = req.body;
+  const { title, description, category, time, instructions, isPublic } =
+    req.body;
   const { _id: owner } = req.user;
   const ingredients = req.body.ingredients.map((item) => {
     return { ...item, id: new ObjectId(item.id) };
   });
 
-  let preview = "";
+  let preview =
+    "https://res.cloudinary.com/dcxlayslv/image/upload/v1692443730/ownrecipe/bvwsacbew2clghxuhte5.jpg";
 
   if (req.file) {
     const imageUrl = cloudinary.url(req.file.filename);
     preview = imageUrl;
   }
 
-  const data = await OwnRecipe.create({
+  const data = await Recipe.create({
     title,
     description,
     category,
@@ -28,6 +30,7 @@ const addOwnRecipe = async (req, res) => {
     preview,
     instructions,
     owner,
+    isPublic,
   });
 
   res.status(201).json({
@@ -49,10 +52,10 @@ const getOwnRecipes = async (req, res) => {
   }
 
   const skip = (page - 1) * limit;
-  const allData = await OwnRecipe.find({ owner });
+  const allData = await Recipe.find({ owner });
   const totalPages = Math.ceil(allData.length / limit);
 
-  const data = await OwnRecipe.aggregate([
+  const data = await Recipe.aggregate([
     {
       $match: {
         owner,
@@ -77,24 +80,20 @@ const getOwnRecipes = async (req, res) => {
 
   res.json({ totalPages, data });
 };
+
 const deleteOwnRecipe = async (req, res) => {
-  const deletedRecipe = await OwnRecipe.findByIdAndRemove(
-    req.params.ownRecipeId
-  );
+  const deletedRecipe = await Recipe.findByIdAndRemove(req.params.id);
 
   if (!deletedRecipe) {
-    throw HttpError(
-      404,
-      `Recipe with id "${req.params.ownRecipeId}" is missing`
-    );
+    throw HttpError(404, `Recipe with id "${req.params.id}" is missing`);
   }
   res.status(204).send();
 };
 
 const getOwnRecipeById = async (req, res) => {
-  const { ownRecipeId } = req.params;
+  const { id } = req.params;
 
-  const [data] = await ownRecipeServise({ ownRecipeId });
+  const [data] = await recipeServise({ id });
 
   res.json(data);
 };

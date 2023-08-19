@@ -1,5 +1,5 @@
 const ObjectId = require("mongodb").ObjectId;
-const Recipe = require("../models/recipe");
+const { Recipe } = require("../models/recipe");
 const Ingredient = require("../models/ingridient");
 const { ctrlWrapper } = require("../utils");
 const { HttpError } = require("../helpers");
@@ -57,7 +57,14 @@ const getSearchRecipes = async (req, res) => {
 
   const data = await Recipe.aggregate([
     {
-      $match: searchQuery,
+      $match: {
+        $and: [
+          searchQuery,
+          {
+            $or: [{ isPublic: { $exists: false } }, { isPublic: true }],
+          },
+        ],
+      },
     },
     {
       $skip: Number(skip),

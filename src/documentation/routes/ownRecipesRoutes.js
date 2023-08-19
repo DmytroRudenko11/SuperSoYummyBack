@@ -75,14 +75,14 @@ const ownRecipesRoutes = {
       },
     },
   },
-  "/api/ownRecipes/{ownRecipeId}": {
+  "/api/ownRecipes/{id}": {
     get: {
       tags: ["Own Recipes"],
 
       summary: "Get own recipe by ID",
       parameters: [
         {
-          name: "ownRecipeId",
+          name: "id",
           in: "path",
           description: "Own recipe ID",
           required: true,

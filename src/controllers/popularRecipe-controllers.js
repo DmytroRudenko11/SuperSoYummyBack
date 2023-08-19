@@ -1,4 +1,4 @@
-const Recipe = require("../models/recipe");
+const { Recipe } = require("../models/recipe");
 const { ctrlWrapper } = require("../utils");
 const { HttpError } = require("../helpers");
 
