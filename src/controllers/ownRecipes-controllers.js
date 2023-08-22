@@ -4,6 +4,7 @@ const { ctrlWrapper } = require("../utils");
 const { HttpError } = require("../helpers");
 const { cloudinary } = require("../utils");
 const { recipeServise } = require("../helpers/recipeServise");
+const { recipeListServise } = require("../helpers/recipeListService");
 
 const addOwnRecipe = async (req, res) => {
   const { title, description, category, time, instructions, isPublic } =
@@ -47,38 +48,18 @@ const addOwnRecipe = async (req, res) => {
 const getOwnRecipes = async (req, res) => {
   const { _id: owner } = req.user;
   const { page = 1, limit = 4 } = req.query;
+  const skip = (page - 1) * limit;
   if (page < 1 || limit < 1) {
     throw HttpError(400, "Invalid page or limit value");
   }
 
-  const skip = (page - 1) * limit;
-  const allData = await Recipe.find({ owner });
-  const totalPages = Math.ceil(allData.length / limit);
+  const result = await recipeListServise("owner", owner, skip, limit, page);
 
-  const data = await Recipe.aggregate([
-    {
-      $match: {
-        owner,
-      },
-    },
-    {
-      $project: {
-        preview: 1,
-        title: 1,
-        time: 1,
-        description: 1,
-        _id: 1,
-      },
-    },
-    {
-      $skip: Number(skip),
-    },
-    {
-      $limit: Number(limit),
-    },
-  ]);
+  const { data, metaData: metaArray } = result[0];
 
-  res.json({ totalPages, data });
+  const metaData = metaArray[0];
+
+  res.json({ metaData, data });
 };
 
 const deleteOwnRecipe = async (req, res) => {
