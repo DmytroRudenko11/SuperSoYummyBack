@@ -16,13 +16,13 @@ const generatePipeline = (matchQuery, owner, skip, limit, page) => {
           {
             $addFields: {
               currentPage: page,
-              totalPages: { $ceil: { $divide: ["$totalHits", limit] } },
+              totalPages: { $ceil: { $divide: ["$totalHits", +limit] } },
             },
           },
         ],
         data: [
-          { $skip: +skip },
-          { $limit: +limit },
+          { $skip: Number(skip) },
+          { $limit: Number(limit) },
           {
             $project: {
               _id: 1,
