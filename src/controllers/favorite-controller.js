@@ -1,6 +1,7 @@
 const { ctrlWrapper } = require("../utils");
 const { Recipe } = require("../models/recipe");
 const { HttpError } = require("../helpers");
+const { recipeListServise } = require("../helpers/recipeListService");
 
 const patchAddfavorite = async (req, res) => {
   const { _id: owner } = req.user;
@@ -34,17 +35,14 @@ const getAllfavorite = async (req, res) => {
   if (page < 1 || limit < 1) {
     throw HttpError(400, "Invalid page or limit value");
   }
-  const allData = await Recipe.find({ favorites: { $in: [owner] } }, {});
 
-  const totalPages = Math.ceil(allData.length / limit);
+  const result = await recipeListServise("favorites", owner, skip, limit, page);
 
-  const data = await Recipe.find(
-    { favorites: { $in: [owner] } },
-    {},
-    { skip, limit }
-  );
+  const { data, metaData: metaArray } = result[0];
 
-  res.json({ totalPages, data });
+  const metaData = metaArray[0];
+
+  res.json({ metaData, data });
 };
 
 module.exports = {
