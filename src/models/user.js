@@ -127,7 +127,7 @@ const userShoppingListSchema = Joi.object({
 });
 
 const refreshTokenSchema = Joi.object({
-  refreshToken: Joi.string().required(),
+  refreshToken: Joi.string().allow(null).required(),
 });
 
 const schemas = {

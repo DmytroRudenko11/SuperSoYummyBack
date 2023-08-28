@@ -38,9 +38,19 @@ const register = async (req, res) => {
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
   await User.findByIdAndUpdate(id, { accessToken, refreshToken });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+  });
+  res.cookie("accessToken", accessToken, { httpOnly: true });
+
+  if (accessToken) {
+    res.setHeader("X-Has-AccessToken", "true");
+  }
+
   res.status(201).json({
-    accessToken,
-    refreshToken,
+    // accessToken,
+    // refreshToken,
     user: {
       _id: currentUser._id,
       name: currentUser.name,
@@ -70,9 +80,19 @@ const login = async (req, res) => {
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
   await User.findByIdAndUpdate(id, { accessToken, refreshToken });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+  });
+  res.cookie("accessToken", accessToken, { httpOnly: true });
+
+  if (accessToken) {
+    res.header("X-Has-AccessToken", "true");
+  }
+
   res.json({
-    accessToken,
-    refreshToken,
+    // accessToken,
+    // refreshToken,
     user: {
       _id: user._id,
       name: user.name,
@@ -83,7 +103,9 @@ const login = async (req, res) => {
 };
 
 const refresh = async (req, res) => {
-  const { refreshToken } = req.body;
+  // console.log(req.cookies);
+  const { refreshToken = "" } = req.cookies;
+
   try {
     const { id } = jwt.verify(refreshToken, REFRESH_SECRET_KEY);
 
@@ -104,10 +126,13 @@ const refresh = async (req, res) => {
       accessToken,
       refreshToken: newRefreshToken,
     });
-    res.json({
-      accessToken,
-      refreshToken: newRefreshToken,
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
     });
+    res.cookie("accessToken", accessToken, { httpOnly: true });
+
+    res.status(201).json({ message: "refresh update" });
   } catch (error) {
     throw HttpError(403, error.message);
   }
@@ -129,6 +154,8 @@ const getCurrent = async (req, res) => {
 const logout = async (req, res) => {
   const { _id } = req.body;
   await User.findByIdAndUpdate(_id, { accessToken: "", refreshToken: "" });
+
+  res.setHeader("X-Has-AccessToken", "false");
 
   res.json({
     message: "Logout success",

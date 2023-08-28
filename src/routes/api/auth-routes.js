@@ -31,7 +31,7 @@ router.post(
 
 router.post(
   "/refresh",
-  validateBody(schemas.refreshTokenSchema),
+  // validateBody(schemas.refreshTokenSchema),
   authControllers.refresh
 );
 
