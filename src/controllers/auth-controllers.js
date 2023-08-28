@@ -83,8 +83,12 @@ const login = async (req, res) => {
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
+    sameSite: "None",
   });
-  res.cookie("accessToken", accessToken, { httpOnly: true });
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    domain: "super-so-yummy.netlify.app",
+  });
 
   if (accessToken) {
     res.header("X-Has-AccessToken", "true");
