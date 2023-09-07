@@ -35,13 +35,14 @@ const addOwnRecipe = async (req, res) => {
   });
 
   res.status(201).json({
-    title,
-    description,
-    category,
-    time,
-    ingredients,
-    preview,
-    instructions,
+    _id: data._id,
+    title: data.title,
+    description: data.description,
+    category: data.category,
+    time: data.time,
+    ingredients: data.ingredients,
+    preview: data.preview,
+    instructions: data.instructions,
   });
 };
 
